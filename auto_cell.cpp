@@ -164,8 +164,6 @@ private:
 
 
   void ai_() {
-    int check_around {0};
-
     for (int i = 0; i < w_; ++i) {
       for (int j = 0; j < h_; ++j) {
 
@@ -177,6 +175,7 @@ private:
 
         // motion
         if (start_) {
+          int check_around {0};
           if (i>0&&j>0 && cells_[(i-1) * w_ + (j-1)].get_active_state() ) { check_around++; }
           if (j>0 && cells_[i * w_ + (j-1)].get_active_state() ) { check_around++; }
           if (i<w_&&j>0 && cells_[(i+1) * w_ + (j-1)].get_active_state() ) { check_around++; }
@@ -202,8 +201,6 @@ private:
 
       }
     }
-
-    SDL_Log("cells: %d", ready_);
 
     for (int i = 0; i < cell_count_; ++i) {
       if(cells_[i].get_active_change()) {
@@ -233,7 +230,7 @@ private:
         frect.x += s.x;
         frect.y += s.y;
         SDL_RenderFillRect(renderer, &frect);
-      } else if (cells_[i].get_wait_state()) {
+      } else if (!start_ && cells_[i].get_wait_state()) {
         SDL_SetRenderDrawColor(renderer, kWaitColor.r, kWaitColor.g, kWaitColor.b, kWaitColor.a);
         SDL_RenderFillRect(renderer, &frect);
       }
@@ -360,7 +357,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     /* Draw the message */
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 127);
     SDL_RenderDebugText(renderer, x, y, message);
     bool status = gCG->play();
     SDL_RenderPresent(renderer);
